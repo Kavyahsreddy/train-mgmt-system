@@ -11,7 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
 
 public class TrainService {
     private List<Train> trains = new ArrayList<>();
@@ -119,6 +125,8 @@ public class TrainService {
 
     private void saveTrains() {
         try (BufferedWriter writer = Files.newBufferedWriter(TRAIN_FILE)) {
+             writer.write("TrainNumber,TrainName,Source,Destination,TrainType,Price,TotalSeats,SubStops");
+        writer.newLine();
             for (Train train : trains) {
                 writer.write(train.trainNumber + "," + train.trainName + "," + train.source + "," +
                         train.destination + "," + train.type + "," + train.price + "," + train.totalSeats + "," +
@@ -132,6 +140,8 @@ public class TrainService {
 
     private void saveCustomers() {
         try (BufferedWriter writer = Files.newBufferedWriter(CUSTOMER_FILE)) {
+             writer.write("CustomerID,Name,DOB");
+        writer.newLine();
             for (Customer customer : customers) {
                 writer.write(customer.id + "," + customer.name + "," + new SimpleDateFormat("dd-MM-yyyy").format(customer.dob));
                 writer.newLine();
@@ -143,6 +153,8 @@ public class TrainService {
 
     private void saveOrders() {
         try (BufferedWriter writer = Files.newBufferedWriter(ORDER_FILE)) {
+             writer.write("OrderID,CustomerID,NumberOfTickets,TotalAmount,TrainNumber,TrainName");
+        writer.newLine();
             for (Order order : orders) {
                 writer.write(order.orderId + "," + order.customerId + "," + order.numberOfTickets + "," +
                         order.totalAmount + "," + order.trainNumber + "," + order.trainName);
