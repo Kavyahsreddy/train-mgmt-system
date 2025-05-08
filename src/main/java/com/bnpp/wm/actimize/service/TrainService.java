@@ -11,12 +11,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+=======
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.Date;
+>>>>>>> 30ff9096b9c318fbbab1a784aba3e47067217836
 
 
 public class TrainService {
