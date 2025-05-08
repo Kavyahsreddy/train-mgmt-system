@@ -1,5 +1,6 @@
-TrainNumber,TrainName,Source,Destination,TrainType,Price,TotalSeats,SubStops
-1,vande,Banglore,Kolkata,FULL_AC,900.0,75,hariyan; himalaya
-2,bharath,mumbai,hydrabad,EXPRESS,1000.0,100,kochi; kunool
+Train Number,Train Name,Source,Destination,Train Type,Price,Total Seats,Sub Stops
+2,bharath,mumbai,hydrabad,EXPRESS,1000.0,22,kochi; kunool
 3,Express1,Chennai,Delhi,EXPRESS,900.0,93,Bhopal; Agra
-4,Rajadhani Express,Banglore,Manglore,EXPRESS,800.0,42,Mysore; kaadugodi
+4,Rajadhani Express,Banglore,Manglore,EXPRESS,800.0,35,Mysore; kaadugodi
+5,Venkatadri Express,Mulbagal,Banglore,EXPRESS,890.0,89,kolar; kochi
+6,vande bharath,Chittor,Banglore,FULL_AC,900.0,76,kolar; palamaner

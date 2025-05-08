@@ -11,21 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-=======
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-import java.util.Date;
->>>>>>> 30ff9096b9c318fbbab1a784aba3e47067217836
 
 
 public class TrainService {
@@ -67,58 +58,67 @@ public class TrainService {
     }
 
     private void loadTrains() {
-        try (BufferedReader reader = Files.newBufferedReader(TRAIN_FILE)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length < 8) {
-                    System.out.println("Skipping invalid line: " + line);
-                    continue;
-                }
-                int trainNumber = Integer.parseInt(parts[0]);
-                String trainName = parts[1];
-                String source = parts[2];
-                String destination = parts[3];
-                TrainType type = TrainType.valueOf(parts[4]);
-                double price = Double.parseDouble(parts[5]);
-                int seats = Integer.parseInt(parts[6]);
-                List<String> subStops = Arrays.asList(parts[7].split(";"));
-                trains.add(new Train(trainNumber, trainName, source, destination, subStops, type, price, seats));
+    try (BufferedReader reader = Files.newBufferedReader(TRAIN_FILE)) {
+        String line = reader.readLine(); // Skip the header line
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length < 8) {
+                System.out.println("Skipping invalid line: " + line);
+                continue;
             }
-        } catch (IOException e) {
-            System.out.println("Error loading train data.");
+            int trainNumber = Integer.parseInt(parts[0]);  // This will work now
+            String trainName = parts[1];
+            String source = parts[2];
+            String destination = parts[3];
+            TrainType type = TrainType.valueOf(parts[4]);
+            double price = Double.parseDouble(parts[5]);
+            int seats = Integer.parseInt(parts[6]);
+            List<String> subStops = Arrays.asList(parts[7].split(";"));
+            trains.add(new Train(trainNumber, trainName, source, destination, subStops, type, price, seats));
         }
+    } catch (IOException e) {
+        System.out.println("Error loading train data.");
     }
+}
+
 
     private void loadCustomers() {
-        try (BufferedReader reader = Files.newBufferedReader(CUSTOMER_FILE)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length != 3) {
-                    System.out.println("Skipping invalid line: " + line);
-                    continue;
-                }
-                try {
-                    int id = Integer.parseInt(parts[0].trim());
-                    String name = parts[1].trim();
-                    Date dob = new SimpleDateFormat("dd-MM-yyyy").parse(parts[2].trim());
-                    customers.add(new Customer(id, name, dob));
-                } catch (Exception e) {
-                    System.out.println("Error parsing customer: " + line);
-                }
+    try (BufferedReader reader = Files.newBufferedReader(CUSTOMER_FILE)) {
+        String line;
+        // Skip the header row
+        reader.readLine();
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length != 3) {
+                System.out.println("Skipping invalid line: " + line);
+                continue;
             }
-        } catch (IOException e) {
-            System.out.println("Error loading customer data.");
+            try {
+                int id = Integer.parseInt(parts[0].trim());
+                String name = parts[1].trim();
+                Date dob = new SimpleDateFormat("dd-MM-yyyy").parse(parts[2].trim());
+                customers.add(new Customer(id, name, dob));
+            } catch (Exception e) {
+                System.out.println("Error parsing customer: " + line);
+            }
         }
+    } catch (IOException e) {
+        System.out.println("Error loading customer data.");
     }
+}
 
     private void loadOrders() {
-        try (BufferedReader reader = Files.newBufferedReader(ORDER_FILE)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length != 6) continue;
+    try (BufferedReader reader = Files.newBufferedReader(ORDER_FILE)) {
+        String line;
+        // Skip the header row
+        reader.readLine();
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length != 6) {
+                System.out.println("Skipping invalid line: " + line);
+                continue;
+            }
+            try {
                 int orderId = Integer.parseInt(parts[0]);
                 int customerId = Integer.parseInt(parts[1]);
                 int numberOfTickets = Integer.parseInt(parts[2]);
@@ -126,53 +126,68 @@ public class TrainService {
                 int trainNumber = Integer.parseInt(parts[4]);
                 String trainName = parts[5];
                 orders.add(new Order(orderId, customerId, numberOfTickets, totalAmount, trainNumber, trainName));
+            } catch (Exception e) {
+                System.out.println("Error parsing order: " + line);
             }
-        } catch (IOException e) {
-            System.out.println("Error loading order data.");
         }
+    } catch (IOException e) {
+        System.out.println("Error loading order data.");
     }
+}
 
     private void saveTrains() {
-        try (BufferedWriter writer = Files.newBufferedWriter(TRAIN_FILE)) {
-             writer.write("TrainNumber,TrainName,Source,Destination,TrainType,Price,TotalSeats,SubStops");
+    try (BufferedWriter writer = Files.newBufferedWriter(TRAIN_FILE)) {
+        // Write the header row
+        writer.write("Train Number,Train Name,Source,Destination,Train Type,Price,Total Seats,Sub Stops");
         writer.newLine();
-            for (Train train : trains) {
-                writer.write(train.trainNumber + "," + train.trainName + "," + train.source + "," +
-                        train.destination + "," + train.type + "," + train.price + "," + train.totalSeats + "," +
-                        String.join(";", train.subStops));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving train data.");
+
+        // Write train data
+        for (Train train : trains) {
+            writer.write(train.trainNumber + "," + train.trainName + "," + train.source + "," +
+                    train.destination + "," + train.type + "," + train.price + "," + train.totalSeats + "," +
+                    String.join(";", train.subStops));
+            writer.newLine();
         }
+    } catch (IOException e) {
+        System.out.println("Error saving train data.");
     }
+}
+
 
     private void saveCustomers() {
-        try (BufferedWriter writer = Files.newBufferedWriter(CUSTOMER_FILE)) {
-             writer.write("CustomerID,Name,DOB");
+    try (BufferedWriter writer = Files.newBufferedWriter(CUSTOMER_FILE)) {
+        // Write the header row
+        writer.write("Customer ID,Name,DOB");
         writer.newLine();
-            for (Customer customer : customers) {
-                writer.write(customer.id + "," + customer.name + "," + new SimpleDateFormat("dd-MM-yyyy").format(customer.dob));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving customer data.");
+
+        // Write customer data
+        for (Customer customer : customers) {
+            writer.write(customer.id + "," + customer.name + "," + new SimpleDateFormat("dd-MM-yyyy").format(customer.dob));
+            writer.newLine();
         }
+    } catch (IOException e) {
+        System.out.println("Error saving customer data.");
     }
+}
+
 
     private void saveOrders() {
-        try (BufferedWriter writer = Files.newBufferedWriter(ORDER_FILE)) {
-             writer.write("OrderID,CustomerID,NumberOfTickets,TotalAmount,TrainNumber,TrainName");
+    try (BufferedWriter writer = Files.newBufferedWriter(ORDER_FILE)) {
+        // Write the header row
+        writer.write("Order ID,Customer ID,Number of Tickets,Total Amount,Train Number,Train Name");
         writer.newLine();
-            for (Order order : orders) {
-                writer.write(order.orderId + "," + order.customerId + "," + order.numberOfTickets + "," +
-                        order.totalAmount + "," + order.trainNumber + "," + order.trainName);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error saving order data.");
+
+        // Write order data
+        for (Order order : orders) {
+            writer.write(order.orderId + "," + order.customerId + "," + order.numberOfTickets + "," +
+                    order.totalAmount + "," + order.trainNumber + "," + order.trainName);
+            writer.newLine();
         }
+    } catch (IOException e) {
+        System.out.println("Error saving order data.");
     }
+}
+
 
     public void adminPanel() {
         while (true) {
